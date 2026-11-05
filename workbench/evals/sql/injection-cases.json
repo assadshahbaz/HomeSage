@@ -1,0 +1,82 @@
+[
+  {
+    "name": "DROP after a SELECT",
+    "sql": "SELECT id FROM properties; DROP TABLE properties"
+  },
+  {
+    "name": "UPDATE after a SELECT",
+    "sql": "SELECT id FROM properties; UPDATE properties SET price = 1"
+  },
+  {
+    "name": "a stacked statement after a trailing semicolon",
+    "sql": "SELECT id FROM properties WHERE town = 'x'; DELETE FROM properties"
+  },
+  {
+    "name": "a DROP alone",
+    "sql": "DROP TABLE property_disclosures"
+  },
+  {
+    "name": "an UPDATE alone",
+    "sql": "UPDATE properties SET price = 0 WHERE id = 1"
+  },
+  {
+    "name": "a line comment hiding the rest of a query",
+    "sql": "SELECT id FROM properties WHERE town = 'x' -- ' AND 1 = 0\n; DROP TABLE properties"
+  },
+  {
+    "name": "a block comment splitting a stacked statement",
+    "sql": "SELECT id FROM properties /* harmless */; DROP /* also harmless */ TABLE properties"
+  },
+  {
+    "name": "UNION into the MySQL user table",
+    "sql": "SELECT id FROM properties UNION SELECT user FROM mysql.user"
+  },
+  {
+    "name": "UNION ALL into information_schema",
+    "sql": "SELECT full_address FROM properties UNION ALL SELECT table_name FROM information_schema.tables"
+  },
+  {
+    "name": "a subquery on a forbidden table",
+    "sql": "SELECT id FROM properties WHERE id IN (SELECT id FROM information_schema.tables)"
+  },
+  {
+    "name": "a scalar subquery on a forbidden table",
+    "sql": "SELECT id, (SELECT authentication_string FROM mysql.user LIMIT 1) AS secret FROM properties"
+  },
+  {
+    "name": "a derived table on a forbidden table",
+    "sql": "SELECT t.user FROM (SELECT user FROM mysql.user) t"
+  },
+  {
+    "name": "a CTE on a forbidden table",
+    "sql": "WITH u AS (SELECT user FROM mysql.user) SELECT u.user FROM u"
+  },
+  {
+    "name": "a join onto a forbidden table",
+    "sql": "SELECT p.id FROM properties p JOIN mysql.user u ON u.user = p.town"
+  },
+  {
+    "name": "EXISTS on a forbidden table",
+    "sql": "SELECT id FROM properties WHERE EXISTS (SELECT 1 FROM performance_schema.threads)"
+  },
+  {
+    "name": "a time based probe",
+    "sql": "SELECT id FROM properties WHERE town = 'x' AND SLEEP(10) = 0"
+  },
+  {
+    "name": "a file read",
+    "sql": "SELECT LOAD_FILE('/var/lib/mysql-files/secret') AS f FROM properties"
+  },
+  {
+    "name": "a file write",
+    "sql": "SELECT full_address FROM properties INTO OUTFILE '/var/lib/mysql-files/dump.csv'"
+  },
+  {
+    "name": "a variable write",
+    "sql": "SELECT @leak := full_address FROM properties"
+  },
+  {
+    "name": "a forbidden column hidden in a subquery",
+    "sql": "SELECT id FROM properties WHERE (SELECT house_floor FROM properties LIMIT 1) = 1"
+  }
+]

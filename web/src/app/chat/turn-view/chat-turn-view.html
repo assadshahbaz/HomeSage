@@ -1,0 +1,40 @@
+<article class="flex flex-col gap-4" [attr.aria-label]="label()">
+  <p class="self-end rounded-lg bg-surface-raised px-4 py-2 break-words text-ink">
+    {{ turn().question }}
+  </p>
+
+  @if (stage(); as label) {
+    <p class="flex items-center gap-2 text-sm text-ink-muted">
+      <hs-spinner size="sm" />
+      {{ label }}
+    </p>
+  }
+
+  <section
+    aria-label="Answer"
+    aria-live="polite"
+    [attr.aria-busy]="streaming() || null"
+    class="text-ink"
+  >
+    <hs-chat-answer
+      [text]="turn().answer"
+      [linkedIds]="citedIds()"
+      [final]="citationsFinal()"
+      (citationSelected)="showCard($event)"
+    />
+    @if (failed()) {
+      <p role="alert" class="mt-2 text-danger">{{ turn().error }}</p>
+    }
+    @if (cancelled()) {
+      <p class="mt-2 text-sm text-ink-muted">Stopped, so a newer question could be answered.</p>
+    }
+  </section>
+
+  @if (showCards()) {
+    <hs-property-card-list
+      [citedIds]="citedIds()"
+      [properties]="properties()"
+      [loading]="searching()"
+    />
+  }
+</article>

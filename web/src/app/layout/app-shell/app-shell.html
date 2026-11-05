@@ -1,0 +1,18 @@
+<a
+  href="#main"
+  class="sr-only rounded-md bg-accent text-on-accent focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-10 focus:px-4 focus:py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
+  (click)="skipToMain($event)"
+>
+  Skip to content
+</a>
+<div class="flex min-h-dvh flex-col">
+  <hs-app-header />
+  <main
+    #main
+    id="main"
+    tabindex="-1"
+    class="mx-auto w-full max-w-3xl flex-1 px-4 py-6 outline-none"
+  >
+    <router-outlet />
+  </main>
+</div>

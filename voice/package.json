@@ -1,0 +1,52 @@
+{
+  "name": "homesage-voice",
+  "version": "0.0.1",
+  "description": "A phone agent for an estate agency, answering buyers from HomeSage and booking viewings",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "nest build",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:prod": "node --disable-warning=ExperimentalWarning dist/main",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write . --ignore-path ../.prettierignore",
+    "format:check": "prettier --check . --ignore-path ../.prettierignore",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
+    "vapi:sync": "node --env-file-if-exists=.env tools/vapi-sync/vapi-sync.ts",
+    "vapi:preview": "node --env-file-if-exists=.env tools/vapi-sync/vapi-sync.ts --dry-run"
+  },
+  "dependencies": {
+    "@nestjs/common": "^12.0.1",
+    "@nestjs/core": "^12.0.1",
+    "@nestjs/platform-express": "^12.0.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@nestjs/cli": "^12.0.0",
+    "@nestjs/schematics": "^12.0.0",
+    "@nestjs/testing": "^12.0.1",
+    "@types/express": "^5.0.0",
+    "@types/node": "^24.0.0",
+    "@types/supertest": "^7.0.0",
+    "@vitest/coverage-v8": "^4.1.2",
+    "eslint": "^10.11.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.8",
+    "supertest": "^7.0.0",
+    "typescript": "^6.0.2",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^4.1.2"
+  }
+}

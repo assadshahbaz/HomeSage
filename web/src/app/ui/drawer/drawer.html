@@ -1,0 +1,21 @@
+<dialog #dialog [class]="classes.dialog" [attr.aria-labelledby]="headingId" (close)="close()">
+  <div [class]="classes.panel">
+    <div [class]="classes.header">
+      <h2 [id]="headingId" [class]="classes.heading">{{ heading() }}</h2>
+      <hs-button variant="ghost" size="sm" label="Close" (click)="close()">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          class="size-5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+      </hs-button>
+    </div>
+    <div [class]="classes.body"><ng-content /></div>
+  </div>
+</dialog>

@@ -1,0 +1,7 @@
+<div [class]="classes.root">
+  <p [class]="classes.heading">{{ heading() }}</p>
+  @if (description()) {
+    <p [class]="classes.description">{{ description() }}</p>
+  }
+  <div [class]="classes.action"><ng-content /></div>
+</div>

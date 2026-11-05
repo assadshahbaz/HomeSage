@@ -1,0 +1,38 @@
+<div [class]="classes.root">
+  <label [for]="controlId" [class]="classes.label">{{ label() }}</label>
+  @if (multiline()) {
+    <textarea
+      #control
+      [id]="controlId"
+      [rows]="rows()"
+      [class]="controlClasses()"
+      [value]="value()"
+      [disabled]="isDisabled()"
+      [attr.placeholder]="placeholder() ?? null"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-invalid]="invalid() || null"
+      (input)="update(control.value)"
+      (blur)="markTouched()"
+    ></textarea>
+  } @else {
+    <input
+      #control
+      [id]="controlId"
+      [type]="type()"
+      [class]="controlClasses()"
+      [value]="value()"
+      [disabled]="isDisabled()"
+      [attr.placeholder]="placeholder() ?? null"
+      [attr.aria-describedby]="describedBy()"
+      [attr.aria-invalid]="invalid() || null"
+      (input)="update(control.value)"
+      (blur)="markTouched()"
+    />
+  }
+  @if (hint()) {
+    <p [id]="hintId" [class]="classes.hint">{{ hint() }}</p>
+  }
+  @if (error()) {
+    <p [id]="errorId" [class]="classes.error">{{ error() }}</p>
+  }
+</div>

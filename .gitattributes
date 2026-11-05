@@ -1,0 +1,6 @@
+* text=auto
+
+# Scripts that run inside Linux containers must keep LF endings, or the shell
+# fails on the carriage returns after a checkout on Windows.
+*.sh text eol=lf
+workbench/docker/**/* text eol=lf

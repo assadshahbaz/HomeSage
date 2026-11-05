@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>HomeSage</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <script>
+      // Set the theme before first paint so a dark reload never flashes light.
+      // ThemePreference takes over once the app starts and uses the same key.
+      (function () {
+        var stored = null;
+        try {
+          stored = localStorage.getItem('hs-theme');
+        } catch (error) {}
+        var dark =
+          stored === 'dark' ||
+          (stored !== 'light' &&
+            !!window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      })();
+    </script>
+  </head>
+  <body>
+    <hs-root></hs-root>
+  </body>
+</html>

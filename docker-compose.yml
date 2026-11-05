@@ -1,0 +1,106 @@
+name: homesage-demo
+
+# Local development stack. Ports bind to 127.0.0.1 only, and Elasticsearch runs
+# without security, so none of this is fit for a shared or public host.
+
+services:
+  mysql:
+    image: mysql:8.4.11
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-homesage}
+      # Read only account the API uses. Created by the init script below.
+      MYSQL_RO_USER: ${MYSQL_RO_USER:-rag_ro}
+      MYSQL_RO_PASSWORD: ${MYSQL_RO_PASSWORD:?set MYSQL_RO_PASSWORD in .env}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_0900_ai_ci
+    ports:
+      - 127.0.0.1:${MYSQL_PORT:-3306}:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # Runs once, when the data volume is first created.
+      - ./workbench/docker/mysql/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'mysqladmin ping -h 127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  elasticsearch:
+    image: elasticsearch:8.19.21
+    restart: unless-stopped
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: 'false'
+      ES_JAVA_OPTS: -Xms${ES_HEAP:-1g} -Xmx${ES_HEAP:-1g}
+    ports:
+      - 127.0.0.1:${ES_PORT:-9200}:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'curl -fs "http://localhost:9200/_cluster/health?wait_for_status=yellow&timeout=5s" > /dev/null',
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  redis:
+    image: redis:8.8.2
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - 127.0.0.1:${REDIS_PORT:-6379}:6379
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Runs the embedding model on this machine. Pulls EMBED_MODEL on first start,
+  # but only when EMBED_PROVIDER names this server, so a stack configured for a
+  # hosted provider never asks for a model name that only the hosted one knows.
+  ollama:
+    image: ollama/ollama:0.34.4
+    restart: unless-stopped
+    environment:
+      EMBED_PROVIDER: ${EMBED_PROVIDER:-}
+      EMBED_MODEL: ${EMBED_MODEL:-}
+    entrypoint: ['/bin/sh', '-c']
+    command:
+      - |
+        ollama serve &
+        until ollama list > /dev/null 2>&1; do sleep 1; done
+        if [ "$$EMBED_PROVIDER" = ollama ]; then ollama pull "$$EMBED_MODEL"; fi
+        wait
+    ports:
+      - 127.0.0.1:${OLLAMA_PORT:-11434}:11434
+    volumes:
+      - ollama-data:/root/.ollama
+    # Healthy once the server answers and, when it is the configured provider,
+    # the model is on disk, so `up --wait` returns with the model ready.
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'ollama list > /dev/null 2>&1 && { [ "$$EMBED_PROVIDER" != ollama ] || ollama show "$$EMBED_MODEL" > /dev/null 2>&1; }',
+        ]
+      interval: 5s
+      timeout: 5s
+      # The first pull downloads the model, which takes a few minutes on a slow line.
+      retries: 120
+      start_period: 30s
+
+volumes:
+  mysql-data:
+  elasticsearch-data:
+  redis-data:
+  ollama-data:

@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+/*
+ * Colour comes only from these tokens, never from Tailwind's palette, which is
+ * switched off so a literal class like bg-red-600 generates nothing. Every
+ * token is redefined for dark mode below, and the text and surface pairs clear
+ * 4.5:1 contrast in both themes (theme-contrast.spec.ts checks both rules).
+ */
+@theme {
+  --color-*: initial;
+
+  --color-surface: #ffffff;
+  --color-surface-raised: #f4f5f7;
+  --color-surface-sunken: #e6e8ec;
+  --color-ink: #1a1d23;
+  --color-ink-muted: #525a66;
+  --color-line: #d3d8df;
+  --color-accent: #1d5bb8;
+  --color-accent-hover: #174a96;
+  --color-on-accent: #ffffff;
+  --color-focus: #1d5bb8;
+  --color-danger: #b42318;
+}
+
+[data-theme='dark'] {
+  --color-surface: #111418;
+  --color-surface-raised: #1b1f25;
+  --color-surface-sunken: #262b33;
+  --color-ink: #e8eaed;
+  --color-ink-muted: #a3abb7;
+  --color-line: #353c47;
+  --color-accent: #7ca8ef;
+  --color-accent-hover: #9dbef4;
+  --color-on-accent: #0b1220;
+  --color-focus: #7ca8ef;
+  --color-danger: #f19087;
+
+  color-scheme: dark;
+}
+
+/* The theme is always set on <html> before first paint, by the script in index.html. */
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+html {
+  color-scheme: light;
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
