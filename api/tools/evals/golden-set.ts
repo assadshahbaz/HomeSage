@@ -66,7 +66,7 @@ export type SqlScoredEntry = GoldenEntry & {
   readonly expected: Exclude<GoldenExpected, { kind: 'relevant_ids' }>;
 };
 
-/** An entry the retrieval runners score by recall: hand labelled relevant ids. */
+/** An entry the retrieval runners score by recall: labelled relevant ids. */
 export type RelevanceScoredEntry = GoldenEntry & {
   readonly expected: Extract<GoldenExpected, { kind: 'relevant_ids' }>;
 };

@@ -38,7 +38,7 @@ function cell(score: RecallScore): string {
 
 /**
  * The ranked lists report: recall at k for kNN alone, BM25 alone, and the two
- * top k lists together, over the golden questions with hand labelled ids.
+ * top k lists together, over the golden questions with labelled ids.
  */
 export function renderRankedListsReport(run: RankedListsEvalRun): string {
   const { questions } = run;
@@ -46,7 +46,7 @@ export function renderRankedListsReport(run: RankedListsEvalRun): string {
   return [
     '# M3 ranked lists eval',
     '',
-    `Written by \`npm run evals\` on ${run.finishedAt.toISOString()}. Each question went through \`RetrievalService\` against the local Elasticsearch index and the configured embedding model, with the default filters, and both rankings were scored against the hand labelled ids.`,
+    `Written by \`npm run evals\` on ${run.finishedAt.toISOString()}. Each question went through \`RetrievalService\` against the local Elasticsearch index and the configured embedding model, with the default filters, and both rankings were scored against the labelled ids.`,
     '',
     '## Configuration',
     '',

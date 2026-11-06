@@ -60,7 +60,7 @@ If each milestone started its own question file, no two reports would measure th
 | `rows` | `reference`, and `ordered: true` when the question asks for an order | Running the reference query through the validator and comparing the rows returned, never the SQL text, since several queries can be right |
 | `aggregate` | `reference` | The same, for a count, an average or a grouped total |
 | `decline` | none | The pipeline refuses instead of answering |
-| `relevant_ids` | `ids`, `uncertainIds` when there are any, `labelledBy`, `labelledOn` | Recall of the labelled ids in the top results, with uncertain ids taken out of the results first. Labelled by hand, as below |
+| `relevant_ids` | `ids`, `uncertainIds` when there are any, `labelledBy`, `labelledOn` | Recall of the labelled ids in the top results, with uncertain ids taken out of the results first. Labelled by a rule, as below |
 
 A reference query is run against the local MySQL at scoring time, so it stays right if the data is reimported. It must not reach the 50 row cap, or it cannot be compared.
 
@@ -71,7 +71,7 @@ Semantic and hybrid questions have no reference query, because what counts as "c
 1. **Write the question first**, and only ask what the data can support. There are no listing descriptions, coordinates or EPC bands, so "near the beach" or "EPC B" belong in `unanswerable`, not here.
 2. **Pool the candidates.** Take the top 20 from each of the three retrieval paths: SQL (with the filters the question states), BM25 over the document text, and kNN over the embeddings. Merge them and drop repeats. Whatever the paths cannot find is not in the pool, so a system that later finds a relevant property outside it is not penalised for it, only unrewarded until the pool is extended.
 3. **Label the pool.** `npm run evals:pool` applies each question's rule to the pool. To review a label, read each candidate's full record in MySQL, not the index document, and mark it relevant only when the record supports every part of the question. When the record points to a match but cannot prove it, such as "5 Chalmers Flats" for a flat, where "Flats" may only be the building's name, it is uncertain. Uncertain ids count neither way: they are dropped from the results before the top k is taken, so finding one earns nothing and costs no slot. When nothing in the record points to a match, it is not relevant. A part of the question that no record can speak to, such as "cosy" or "a quiet street", is left out of the judgement rather than failing every candidate, and the entry's `category` names it, so a reader knows the label does not cover it.
-4. **Record the label.** `ids` holds the relevant property ids, `uncertainIds` the uncertain ones (left out when there are none), `labelledBy` the GitHub username of the person who labelled them, and `labelledOn` the date, as `YYYY-MM-DD`.
+4. **Record the label.** `ids` holds the relevant property ids, `uncertainIds` the uncertain ones (left out when there are none), `labelledBy` the rule or person that labelled them, and `labelledOn` the date, as `YYYY-MM-DD`.
 5. **Extend, never rewrite.** When a later milestone surfaces a candidate in its top results that the pool never held, label that candidate, add it if relevant, and update `labelledBy` and `labelledOn`. Existing labels change only when they were wrong, and the pull request says why.
 
 An entry whose pool held nothing relevant is not added. A question with no right answer measures nothing.

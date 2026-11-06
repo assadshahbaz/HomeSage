@@ -11,6 +11,9 @@ Ideas and known gaps. Nothing here is scheduled.
 
 ## Search quality
 
+* **A model chosen order drops the search lists.** For hybrid questions the SQL model adds `ORDER BY price` unasked, and retrieval keeps an order it takes to be the user's, so "quiet" or "bright" never shapes the result. The SQL prompt should order only when the question asks, or retrieval should fuse whenever the question did not ask for an order.
+* **The router is unsteady on some filters.** "Which properties in Peterhead have a double garage?" was declined in one run and routed with a garage filter in the next, at temperature 0. "Commercial units for sale in Stonehaven" kept the default of homes only. A double garage filter, and examples in the router prompt for property kinds, would help.
+
 * **Semantic recall is limited by the text.** Listings have no descriptions, so vague questions match poorly. Descriptive phrases derived from the rows, and a separate field for embedding text, would be the next things to measure.
 * **Postcode coordinates.** There are no coordinates, so "near the university" cannot be answered. Postcode centroids would unlock distance questions.
 * **Seller detail under an unknown answer is thrown away.** The document writes a seller's detail sentence only when the answer beside it is yes or no. A rule that writes the detail under its label without claiming an answer would recover those facts.

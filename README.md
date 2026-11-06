@@ -116,7 +116,23 @@ The first `docker compose up` takes a few minutes longer, because Ollama downloa
 
 Passing tests show the code agrees with itself. The evals show whether answers are right. They run real questions through the real models and services, and write a report to [workbench/evals/reports](workbench/evals/reports).
 
-Results will be added here once the final eval run is complete.
+Latest results, on the synthetic listings from `npm run db:seed`:
+
+| Eval | Result |
+|------|--------|
+| Text to SQL, golden set | 22 of 22 |
+| SQL injection suite | 20 of 20 rejected |
+| Prompt injection in the question | 9 of 9 refused |
+| Router intent | 48 of 54 (89 percent) |
+| Router filters | precision 86 percent, recall 89 percent |
+| Filters: returned properties that break a filter | 0, across 20 questions |
+| Aggregates and ordering | 8 of 8 |
+| Zero matches answered without the answer model | 3 of 3 |
+| Citations outside the retrieved set | 0, across 33 answers |
+| Semantic retrieval, mean recall at 8 | 26 percent |
+| Hybrid retrieval, fused recall at 8 | 46 percent |
+
+The semantic labels come from rules over the generated fields, not from people reading every listing, so the recall figures say how well search finds what the generator planted. The data is made up, so these numbers describe the pipeline, not a real market.
 
 ```
 cd api

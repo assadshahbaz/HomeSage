@@ -202,7 +202,7 @@ export function renderSemanticReport(run: SemanticEvalRun): string {
     '',
     '## How it is scored',
     '',
-    `Questions come from \`workbench/evals/golden-set.json\`, picked by the milestones and slices above, each labelled by hand from a pool of candidates as \`workbench/evals/README.md\` describes. A question's recall at k is the relevant properties found in its top k, divided by k or by the number of relevant properties, whichever is smaller, so a perfect top k scores 100 percent. Uncertain properties, which the record points to but cannot prove, are taken out of the results before the cut: finding one neither earns a hit nor uses up a slot. The API returns at most ${maxTopK}, so a question with an uncertain property in its top ${maxTopK} is judged on fewer at ${maxTopK}.`,
+    `Questions come from \`workbench/evals/golden-set.json\`, picked by the milestones and slices above, each labelled by a rule over the generated fields as \`workbench/evals/README.md\` describes. A question's recall at k is the relevant properties found in its top k, divided by k or by the number of relevant properties, whichever is smaller, so a perfect top k scores 100 percent. Uncertain properties, which the record points to but cannot prove, are taken out of the results before the cut: finding one neither earns a hit nor uses up a slot. The API returns at most ${maxTopK}, so a question with an uncertain property in its top ${maxTopK} is judged on fewer at ${maxTopK}.`,
     '',
     `Latency is the round trip of \`POST /search/semantic\` inside the process, after every question has been asked once, so the model and the index are warm. The questions are asked in turn until the sample is full.`,
     '',
