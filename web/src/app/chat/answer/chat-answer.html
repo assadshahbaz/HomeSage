@@ -1,0 +1,20 @@
+<div class="flex flex-col gap-3 break-words">
+  @for (block of blocks(); track $index) {
+    @if (block.kind === 'list') {
+      <ul class="flex list-disc flex-col gap-1 pl-5">
+        @for (item of block.items; track $index) {
+          <li><hs-answer-line [line]="item" (citationSelected)="selectCitation($event)" /></li>
+        }
+      </ul>
+    } @else {
+      <p>
+        @for (line of block.lines; track $index) {
+          @if (!$first) {
+            <br />
+          }
+          <hs-answer-line [line]="line" (citationSelected)="selectCitation($event)" />
+        }
+      </p>
+    }
+  }
+</div>

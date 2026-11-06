@@ -1,0 +1,22 @@
+@for (part of parts(); track $index) {
+  @switch (part.kind) {
+    @case ('strong') {
+      <strong>{{ part.text }}</strong>
+    }
+    @case ('citation') {
+      @if (part.linked) {
+        <hs-text-button [label]="part.label" (click)="selectCitation(part.id)"
+          >P-{{ part.id }}</hs-text-button
+        >
+      } @else {
+        <ng-container>{{ part.marker }}</ng-container>
+      }
+    }
+    @case ('sql') {
+      <ng-container>{{ part.marker }}</ng-container>
+    }
+    @case ('text') {
+      <ng-container>{{ part.text }}</ng-container>
+    }
+  }
+}

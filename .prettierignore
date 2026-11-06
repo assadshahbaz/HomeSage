@@ -1,0 +1,14 @@
+dist
+coverage
+node_modules
+.angular
+workbench/data
+package-lock.json
+api/tools/seed/schema.sql
+
+# Prose is written by hand. Prettier would rewrite every list marker and
+# nothing about the result would read better.
+*.md
+
+# The voice agent keeps its SQLite file here
+data

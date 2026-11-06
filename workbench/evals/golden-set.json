@@ -1,0 +1,1082 @@
+[
+  {
+    "id": "count-stonehaven",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "aggregate",
+    "question": "How many listings are there in Stonehaven?",
+    "expected": {
+      "kind": "aggregate",
+      "reference": "SELECT COUNT(*) AS listings FROM properties p WHERE p.town = 'Stonehaven'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Stonehaven"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "average-price-banchory-homes",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "aggregate",
+    "question": "What is the average asking price of homes in Banchory?",
+    "expected": {
+      "kind": "aggregate",
+      "reference": "SELECT AVG(p.price) AS average_price FROM properties p WHERE p.town = 'Banchory' AND p.property_kind = 'residential'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Banchory"
+        ]
+      }
+    }
+  },
+  {
+    "id": "five-cheapest-3-bed-ellon",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "ordering",
+    "question": "What are the five cheapest 3 bedroom homes in Ellon?",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.price FROM properties p WHERE p.town = 'Ellon' AND p.bedrooms = 3 ORDER BY p.price ASC LIMIT 5",
+      "ordered": true
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Ellon"
+        ],
+        "minBedrooms": 3,
+        "maxBedrooms": 3
+      }
+    }
+  },
+  {
+    "id": "ab15-5-bed-under-500k",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "postcode district, bedrooms, price range",
+    "question": "Homes in AB15 with five or more bedrooms for under £500,000",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.postcode_district = 'AB15' AND p.bedrooms >= 5 AND p.price < 500000"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "postcodeDistricts": [
+          "AB15"
+        ],
+        "minBedrooms": 5,
+        "maxPrice": 500000
+      }
+    }
+  },
+  {
+    "id": "peterhead-double-garage",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "boolean flag",
+    "question": "Which properties in Peterhead have a double garage?",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Peterhead' AND p.has_double_garage = TRUE"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Peterhead"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "westhill-3-bathrooms",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "bathrooms",
+    "question": "Houses in Westhill with three bathrooms",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Westhill' AND p.bathrooms = 3"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Westhill"
+        ]
+      }
+    }
+  },
+  {
+    "id": "towns-over-150-listings",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "aggregate",
+    "question": "Which towns have more than 150 listings, and how many does each have?",
+    "expected": {
+      "kind": "aggregate",
+      "reference": "SELECT p.town, COUNT(*) AS listings FROM properties p WHERE p.town IS NOT NULL GROUP BY p.town HAVING COUNT(*) > 150"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "average-price-by-bedrooms-aberdeen",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "aggregate, bedrooms",
+    "question": "The average asking price of 1, 2, 3 and 4 bedroom homes in Aberdeen, by number of bedrooms",
+    "expected": {
+      "kind": "aggregate",
+      "reference": "SELECT p.bedrooms, AVG(p.price) AS average_price FROM properties p WHERE p.town = 'Aberdeen' AND p.bedrooms BETWEEN 1 AND 4 AND p.property_kind = 'residential' GROUP BY p.bedrooms"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Aberdeen"
+        ]
+      }
+    }
+  },
+  {
+    "id": "most-expensive-inverurie",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "ordering",
+    "question": "What is the most expensive property in Inverurie?",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id, p.price FROM properties p WHERE p.town = 'Inverurie' ORDER BY p.price DESC LIMIT 1",
+      "ordered": true
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Inverurie"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "ab10-garden-100k-to-150k",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "postcode district, price range, boolean flag",
+    "question": "Listings in AB10 with a garden priced between £100,000 and £150,000",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.postcode_district = 'AB10' AND p.has_garden = TRUE AND p.price BETWEEN 100000 AND 150000"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "postcodeDistricts": [
+          "AB10"
+        ],
+        "hasGarden": true,
+        "minPrice": 100000,
+        "maxPrice": 150000,
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "ev-charge-point",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "boolean flag",
+    "question": "Which properties have an electric vehicle charge point?",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.has_electric_vehicle_charge_point = TRUE"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "ellon-3-public-rooms-under-300k",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "price range, rooms",
+    "question": "Homes in Ellon under £300k with at least three public rooms",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Ellon' AND p.public_rooms >= 3 AND p.price < 300000"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Ellon"
+        ],
+        "maxPrice": 300000
+      }
+    }
+  },
+  {
+    "id": "stonehaven-ground-floor-bedroom",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "boolean flag",
+    "question": "Properties in Stonehaven with a bedroom and bathroom on the ground floor",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Stonehaven' AND p.has_ground_floor_bedroom_bathroom = TRUE"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Stonehaven"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "banchory-oil-heating",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "disclosures join",
+    "question": "Listings in Banchory where the seller says the heating is oil",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p JOIN property_disclosures d ON d.property_id = p.id WHERE p.town = 'Banchory' AND d.heating_type = 'oil'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Banchory"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "aberdeen-conservation-area-count",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "disclosures join, aggregate",
+    "question": "How many Aberdeen listings are in a conservation area, according to the seller?",
+    "expected": {
+      "kind": "aggregate",
+      "reference": "SELECT COUNT(*) AS listings FROM properties p JOIN property_disclosures d ON d.property_id = p.id WHERE p.town = 'Aberdeen' AND d.conservation_area = 'yes'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Aberdeen"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "inverurie-asbestos",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "disclosures join",
+    "question": "Properties in Inverurie where the seller reported asbestos",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p JOIN property_disclosures d ON d.property_id = p.id WHERE p.town = 'Inverurie' AND d.asbestos = 'yes'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Inverurie"
+        ],
+        "propertyKinds": [
+          "residential",
+          "plot",
+          "commercial",
+          "other"
+        ]
+      }
+    }
+  },
+  {
+    "id": "westhill-2-bed-mains-drainage",
+    "slice": "structured_filters",
+    "milestone": "M1",
+    "category": "disclosures left join",
+    "question": "All two bedroom homes in Westhill, showing the seller's answer on mains drainage where there is one",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id, d.mains_drainage FROM properties p LEFT JOIN property_disclosures d ON d.property_id = p.id WHERE p.town = 'Westhill' AND p.bedrooms = 2"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Westhill"
+        ],
+        "minBedrooms": 2,
+        "maxBedrooms": 2
+      }
+    }
+  },
+  {
+    "id": "stonehaven-2-bed-heating-where-known",
+    "slice": "structured_filters",
+    "milestone": "M1.1",
+    "category": "disclosures left join",
+    "question": "Two bedroom homes in Stonehaven, with the seller's heating type where they gave one",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id, d.heating_type FROM properties p LEFT JOIN property_disclosures d ON d.property_id = p.id WHERE p.town = 'Stonehaven' AND p.bedrooms = 2 AND p.property_kind = 'residential'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Stonehaven"
+        ],
+        "minBedrooms": 2,
+        "maxBedrooms": 2
+      }
+    }
+  },
+  {
+    "id": "stonehaven-no-mains-drainage",
+    "slice": "structured_filters",
+    "milestone": "M1.1",
+    "category": "disclosures join",
+    "question": "Homes in Stonehaven where the seller says there is no mains drainage",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p JOIN property_disclosures d ON d.property_id = p.id WHERE p.town = 'Stonehaven' AND d.mains_drainage = 'no' AND p.property_kind = 'residential'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Stonehaven"
+        ]
+      }
+    }
+  },
+  {
+    "id": "count-plots",
+    "slice": "aggregates_and_ordering",
+    "milestone": "M1",
+    "category": "aggregate",
+    "question": "How many plots of land are for sale?",
+    "expected": {
+      "kind": "aggregate",
+      "reference": "SELECT COUNT(*) AS plots FROM properties p WHERE p.property_kind = 'plot'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "propertyKinds": [
+          "plot"
+        ]
+      }
+    }
+  },
+  {
+    "id": "decline-epc-rating",
+    "slice": "unanswerable",
+    "milestone": "M1",
+    "category": "refusal",
+    "question": "Which homes in Aberdeen have an EPC rating of B or better?",
+    "expected": {
+      "kind": "decline"
+    },
+    "route": {
+      "intents": [
+        "out_of_scope"
+      ]
+    }
+  },
+  {
+    "id": "decline-pets-near-university",
+    "slice": "unanswerable",
+    "milestone": "M1",
+    "category": "refusal",
+    "question": "Show me pet friendly flats within a mile of the university",
+    "expected": {
+      "kind": "decline"
+    },
+    "route": {
+      "intents": [
+        "out_of_scope"
+      ]
+    }
+  },
+  {
+    "id": "cosy-flat-garden-quiet-street",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "flat, garden; cosy and quiet street cannot be checked",
+    "question": "cosy flat with a garden and a quiet street",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        7,
+        18,
+        19,
+        23,
+        25,
+        29,
+        30,
+        32,
+        35,
+        39,
+        48,
+        49,
+        51,
+        52,
+        55,
+        57,
+        78,
+        79,
+        82,
+        83,
+        118,
+        125,
+        148,
+        149,
+        168,
+        173,
+        177,
+        200,
+        224,
+        287,
+        290,
+        314,
+        325,
+        327,
+        355,
+        438,
+        447,
+        454,
+        487,
+        490,
+        513,
+        525,
+        609,
+        613,
+        623,
+        628,
+        754
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid"
+      ]
+    }
+  },
+  {
+    "id": "no-stairs-to-bedroom-or-bathroom",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "ground floor bedroom and bathroom",
+    "question": "a home where I would not need stairs to reach a bedroom or a bathroom",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        2,
+        12,
+        14,
+        25,
+        28,
+        31,
+        35,
+        40,
+        42,
+        43,
+        48,
+        49,
+        53,
+        65,
+        77,
+        85,
+        89,
+        92,
+        95,
+        96,
+        107,
+        157,
+        200,
+        275,
+        487,
+        492,
+        512,
+        539,
+        706,
+        759
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "annexe-for-a-relative",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "granny flat",
+    "question": "a house with a separate annexe where a relative could live",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        54,
+        59,
+        74,
+        91,
+        140,
+        165,
+        182,
+        198,
+        201,
+        215,
+        234,
+        263,
+        289,
+        300,
+        307,
+        316,
+        317,
+        362,
+        415,
+        416,
+        420
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "charge-an-electric-car-at-home",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "electric vehicle charge point",
+    "question": "somewhere I can charge my electric car at home",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        6,
+        14,
+        18,
+        54,
+        102,
+        115,
+        130,
+        142,
+        195,
+        218,
+        233,
+        238,
+        260,
+        268,
+        374,
+        383,
+        394,
+        405,
+        412,
+        424,
+        445,
+        520,
+        550,
+        622,
+        644,
+        647,
+        660,
+        667,
+        677,
+        679,
+        726,
+        800
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "renewable-energy-home",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "green energy",
+    "question": "a home that runs on renewable energy",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        23,
+        42,
+        48,
+        70,
+        98,
+        123,
+        132,
+        148,
+        159,
+        163,
+        181,
+        185,
+        195,
+        216,
+        222,
+        229,
+        257,
+        262,
+        272,
+        279,
+        310,
+        343,
+        395,
+        447,
+        581,
+        593,
+        659,
+        676,
+        735
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "house-with-some-land",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "land",
+    "question": "a house that comes with a bit of land around it",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        7,
+        46,
+        50,
+        55,
+        105,
+        116,
+        141,
+        143,
+        199,
+        208,
+        209,
+        229,
+        230,
+        322,
+        340,
+        383,
+        420,
+        442,
+        472,
+        487,
+        593,
+        603,
+        655,
+        682,
+        742,
+        761,
+        773
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "two-cars-under-cover",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "double garage",
+    "question": "somewhere with room to keep two cars under cover",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        5,
+        7,
+        10,
+        15,
+        24,
+        36,
+        54,
+        60,
+        62,
+        67,
+        77,
+        101,
+        102,
+        113,
+        121,
+        149,
+        182,
+        237,
+        247,
+        253,
+        518,
+        539
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "heated-by-oil-not-gas",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "disclosures: oil heating",
+    "question": "a home heated by oil rather than mains gas",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        3,
+        4,
+        5,
+        35,
+        53,
+        57,
+        61,
+        68,
+        73,
+        116,
+        123,
+        126,
+        135,
+        138,
+        147,
+        150,
+        162,
+        164,
+        197,
+        202,
+        217,
+        229,
+        267,
+        308,
+        329,
+        607,
+        610,
+        623,
+        668,
+        706
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "brand-new-never-lived-in",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "new build",
+    "question": "a brand new home that nobody has lived in before",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        4,
+        30,
+        62,
+        70,
+        72,
+        89,
+        144,
+        145,
+        175,
+        305,
+        327,
+        386,
+        441,
+        443,
+        456,
+        496,
+        512,
+        515,
+        534,
+        546,
+        583,
+        591,
+        649,
+        661,
+        702,
+        751,
+        755,
+        781
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic",
+        "hybrid",
+        "structured"
+      ]
+    }
+  },
+  {
+    "id": "project-to-renovate",
+    "slice": "semantic",
+    "milestone": "M2",
+    "category": "development opportunity",
+    "question": "a building I could take on as a renovation project",
+    "expected": {
+      "kind": "relevant_ids",
+      "ids": [
+        87,
+        230,
+        282,
+        295,
+        326,
+        424,
+        443,
+        444,
+        456,
+        510,
+        558,
+        573,
+        588,
+        667,
+        669,
+        699,
+        729,
+        739,
+        750,
+        791
+      ],
+      "labelledBy": "rule in labelling/m2-questions.json",
+      "labelledOn": "2026-11-04"
+    },
+    "route": {
+      "intents": [
+        "semantic"
+      ]
+    }
+  },
+  {
+    "id": "westhill-under-50k",
+    "slice": "zero_matches",
+    "milestone": "M3",
+    "category": "price below anything in the town",
+    "question": "Homes for sale in Westhill under £50,000",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Westhill' AND p.property_kind = 'residential' AND p.price < 50000"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Westhill"
+        ],
+        "maxPrice": 50000
+      }
+    }
+  },
+  {
+    "id": "aberdeen-5-bed-under-100k",
+    "slice": "zero_matches",
+    "milestone": "M3",
+    "category": "bedrooms and price that never meet",
+    "question": "Five bedroom homes in Aberdeen for under £100,000",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Aberdeen' AND p.property_kind = 'residential' AND p.bedrooms >= 5 AND p.price < 100000"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Aberdeen"
+        ],
+        "minBedrooms": 5,
+        "maxPrice": 100000
+      }
+    }
+  },
+  {
+    "id": "stonehaven-commercial",
+    "slice": "zero_matches",
+    "milestone": "M3",
+    "category": "a town with no listings of that kind",
+    "question": "Commercial units for sale in Stonehaven",
+    "expected": {
+      "kind": "rows",
+      "reference": "SELECT p.id FROM properties p WHERE p.town = 'Stonehaven' AND p.property_kind = 'commercial'"
+    },
+    "route": {
+      "intents": [
+        "structured"
+      ],
+      "filters": {
+        "towns": [
+          "Stonehaven"
+        ],
+        "propertyKinds": [
+          "commercial"
+        ]
+      }
+    }
+  }
+]

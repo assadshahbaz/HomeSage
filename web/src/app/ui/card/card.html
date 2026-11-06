@@ -1,0 +1,18 @@
+<article [class]="rootClasses()">
+  <div [class]="classes.top">
+    @if (heading()) {
+      <h3 [class]="classes.heading">
+        @if (hasAction()) {
+          <button type="button" [class]="classes.action" (click)="activate()">
+            {{ heading() }}
+          </button>
+        } @else {
+          {{ heading() }}
+        }
+      </h3>
+    }
+    <div [class]="slotClasses()"><ng-content select="[hsCardHeader]" /></div>
+  </div>
+  <div [class]="slotClasses()"><ng-content /></div>
+  <div [class]="slotClasses()"><ng-content select="[hsCardFooter]" /></div>
+</article>

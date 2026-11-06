@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cosy-flat-garden-quiet-street",
+    "category": "flat, garden; cosy and quiet street cannot be checked",
+    "question": "cosy flat with a garden and a quiet street",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND LOWER(p.full_address) LIKE '%flat%' AND p.has_garden = TRUE"
+  },
+  {
+    "id": "no-stairs-to-bedroom-or-bathroom",
+    "category": "ground floor bedroom and bathroom",
+    "question": "a home where I would not need stairs to reach a bedroom or a bathroom",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.has_ground_floor_bedroom_bathroom = TRUE"
+  },
+  {
+    "id": "annexe-for-a-relative",
+    "category": "granny flat",
+    "question": "a house with a separate annexe where a relative could live",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.has_granny_flat = TRUE"
+  },
+  {
+    "id": "charge-an-electric-car-at-home",
+    "category": "electric vehicle charge point",
+    "question": "somewhere I can charge my electric car at home",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.has_electric_vehicle_charge_point = TRUE"
+  },
+  {
+    "id": "renewable-energy-home",
+    "category": "green energy",
+    "question": "a home that runs on renewable energy",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.has_green_energy = TRUE"
+  },
+  {
+    "id": "house-with-some-land",
+    "category": "land",
+    "question": "a house that comes with a bit of land around it",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.has_land = TRUE"
+  },
+  {
+    "id": "two-cars-under-cover",
+    "category": "double garage",
+    "question": "somewhere with room to keep two cars under cover",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.has_double_garage = TRUE"
+  },
+  {
+    "id": "heated-by-oil-not-gas",
+    "category": "disclosures: oil heating",
+    "question": "a home heated by oil rather than mains gas",
+    "rule": "SELECT p.id FROM properties p JOIN property_disclosures d ON d.property_id = p.id WHERE p.property_kind = 'residential' AND d.heating_type = 'oil'"
+  },
+  {
+    "id": "brand-new-never-lived-in",
+    "category": "new build",
+    "question": "a brand new home that nobody has lived in before",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.is_new_build = TRUE"
+  },
+  {
+    "id": "project-to-renovate",
+    "category": "development opportunity",
+    "question": "a building I could take on as a renovation project",
+    "rule": "SELECT p.id FROM properties p WHERE p.property_kind = 'residential' AND p.is_development_opportunity = TRUE"
+  }
+]

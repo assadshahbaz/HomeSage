@@ -1,0 +1,54 @@
+<div class="flex flex-col gap-6">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-semibold text-ink">Ask about homes in Aberdeen</h1>
+      <p class="mt-2 text-ink-muted">
+        Search Aberdeen and Aberdeenshire listings in plain English.
+      </p>
+    </div>
+    @if (started()) {
+      <hs-button size="sm" (click)="startNewConversation()">New conversation</hs-button>
+    }
+  </div>
+
+  @if (started()) {
+    <div class="flex flex-col gap-8">
+      @for (turn of turns(); track turn.id) {
+        <hs-chat-turn-view [turn]="turn" />
+      }
+    </div>
+  } @else {
+    <hs-empty-state
+      heading="Ask your first question"
+      description="Every answer comes from the listings and cites the homes it is based on. Try one of these:"
+    >
+      <ul class="flex flex-col gap-2 text-left">
+        @for (example of examples; track example) {
+          <li>
+            <hs-text-button (click)="askExample(example)">{{ example }}</hs-text-button>
+          </li>
+        }
+      </ul>
+    </hs-empty-state>
+  }
+
+  <form class="flex flex-col gap-2" [formGroup]="form" (ngSubmit)="send()">
+    <hs-input
+      label="Your question"
+      hint="Enter sends, Shift+Enter starts a new line."
+      [multiline]="true"
+      [rows]="questionRows"
+      [disabled]="busy()"
+      formControlName="question"
+      (keydown.enter)="sendOnEnter($event)"
+    />
+    <div class="flex justify-end">
+      <hs-button type="submit" variant="primary" [disabled]="busy()">
+        @if (busy()) {
+          <hs-spinner size="sm" />
+        }
+        Send
+      </hs-button>
+    </div>
+  </form>
+</div>

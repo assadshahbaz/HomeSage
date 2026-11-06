@@ -1,0 +1,142 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to a pull request makes the run in progress pointless.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  dummy-data:
+    name: dummy data only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+
+      - run: node workbench/guards/check-dummy-data.mjs
+
+  api:
+    name: api
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            api/package-lock.json
+            web/package-lock.json
+
+      - run: npm ci
+        working-directory: api
+
+      - run: npm run lint
+        working-directory: api
+
+      - run: npm run format:check
+        working-directory: api
+
+      - run: npm run typecheck
+        working-directory: api
+
+      - run: npm run test:cov
+        working-directory: api
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage-api
+          path: api/coverage
+          if-no-files-found: warn
+
+  web:
+    name: web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            api/package-lock.json
+            web/package-lock.json
+
+      # The web app compiles the API contracts, which import zod from the API's
+      # own node_modules, so the API is installed here even though it is not run.
+      - run: npm ci
+        working-directory: api
+
+      - run: npm ci
+        working-directory: web
+
+      - run: npm run lint
+        working-directory: web
+
+      - run: npm run format:check
+        working-directory: web
+
+      - run: npm run typecheck
+        working-directory: web
+
+      # Templates are only type checked by a real build, and strictTemplates is on.
+      - run: npm run build
+        working-directory: web
+
+      - run: npm run test:cov
+        working-directory: web
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage-web
+          path: web/coverage
+          if-no-files-found: warn
+
+  voice:
+    name: voice
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: voice/package-lock.json
+
+      - run: npm ci
+        working-directory: voice
+
+      - run: npm run lint
+        working-directory: voice
+
+      - run: npm run format:check
+        working-directory: voice
+
+      - run: npm run typecheck
+        working-directory: voice
+
+      - run: npm test
+        working-directory: voice
+
+      # Runs the whole server against a fake HomeSage, so it needs no other service.
+      - run: npm run test:e2e
+        working-directory: voice
+
+      - run: npm run build
+        working-directory: voice
